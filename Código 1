@@ -1,0 +1,76 @@
+/*  Escribe un programa en C que, al recibir como dato n cadenas de caracteres, imprima la cadena en forma inversa. El resultado se 
+enviará a un archivo además de indicar cuántas palabras conforman la cadena ingresada, cuántas vocales, cuántas consonantes y 
+cuántos espacios contiene. 
+Por ejemplo, si la cadena es la siguiente:
+mundo del economia novena la es Mexico
+el programa debe imprimirla de esta forma:
+México es la novena economía del mundo
+Tiene 6 espacios, 16 vocales y 22 consonantes */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void) {
+    char str[100];
+    int len, i, j, v, c, e, n;
+    char *strings;
+    FILE *archivo;
+
+    printf("Numero de cadenas a ingresar: ");
+    scanf("%d", &n);
+    getchar();
+
+    strings = malloc(n * sizeof(char *));
+
+    for (int k = 1; k <= n; k++) {
+        printf("\nIngrese la cadena %d: ", k);
+        fgets(str, 100, stdin);
+        len = strlen(str);
+
+        v = c = e = 0;  //reset para la sig. cadena
+
+
+        for (i = len - 2; i >= 0; i--) {
+            if (str[i] == ' ') {
+                e++;
+                for (j = i + 1; j < len - 1 && str[j] != ' '; j++) {
+                    printf("%c", str[j]);
+                    if (str[j] == 'a' || str[j] == 'e' || str[j] == 'i' || str[j] == 'o' || str[j] == 'u' || str[j] == 'A' || str[j] == 'E' || str[j] == 'I' || str[j] == 'O' || str[j] == 'U') {
+                        v++;
+                    } else if ((str[j] >= 'a' && str[j] <= 'z') || (str[j] >= 'A' && str[j] <= 'Z')) {
+                        c++;
+                    }
+                }
+                printf(" ");
+            }
+        }
+
+        for (j = 0; j < len - 1 && str[j] != ' '; j++) {
+            printf("%c", str[j]);
+
+
+            if (str[j] == 'a' || str[j] == 'e' || str[j] == 'i' || str[j] == 'o' || str[j] == 'u' || str[j] == 'A' || str[j] == 'E' || str[j] == 'I' || str[j] == 'O' || str[j] == 'U') {
+                v++;
+            } else if ((str[j] >= 'a' && str[j] <= 'z') || (str[j] >= 'A' && str[j] <= 'Z')) {
+                c++;
+            }
+        }
+
+        archivo = fopen("Resultados.txt", "a");
+        if (archivo == NULL) {
+            printf("Error ");
+            return 1;
+        }
+
+        printf("\nvocales: %d\nconsonantes: %d\nespacios: %d\n", v, c, e);
+        fprintf(archivo, "%s", str);
+        fprintf(archivo, "vocales: %d\nconsonantes: %d\nespacios: %d\n\n", v, c, e);
+
+
+        v = c = e = 0; //reset para la sig. cadena
+    }
+
+    free(strings);
+
+}
